@@ -30,16 +30,30 @@ Route::match(['get', 'post'], '/home', [App\Http\Controllers\HomeController::cla
 
 Route::get('/download', function () {
     // $fileDate= date('Y-m-d');
-    $file = public_path() . '/data.xlsx';
+    // $file = public_path() . '/data.xlsx';
 
-    $headers = array(
-        'Content-Type : application/xlsx',
-    );
+    // $headers = array(
+    //     'Content-Type : application/xlsx',
+    // );
 
-    return Response::download($file, 'data.xlsx', $headers);
+    // return Response::download($file, 'data.xlsx', $headers);
+    $zip_file = 'dataCrawl.zip';
+    touch($zip_file);
+
+    $zip = new ZipArchive();
+    $this_zip = $zip->open($zip_file);
+    $fileDate = date('Y-m-d');
+
+    if ($this_zip) {
+        $file_with_path = 'dataCrawl/' . $fileDate . '/' . 'data.xlsx';
+        $name = "data.xlsx";
+        $zip->addFile($file_with_path, $name);
+    }
 });
 
-Route::post('/run-command', [ApiController::class, 'runCommand'])->name('command');
+// Route::post('/run-command', [ApiController::class, 'runCommand'])->name('command');
 // Route::get('/run-command', [ApiController::class, 'runCommand'])->name('command');
 Route::post('/test-api', [ApiController::class, 'testApi'])->name('testApi');
 Route::match(['get', 'post'], '/run-file', [HomeController::class, 'runFile'])->name('run-file');
+Route::get('/return-links', [ApiController::class, 'returnTotalLink']);
+Route::post('/reset-link', [ApiController::class, 'resetLinks']);

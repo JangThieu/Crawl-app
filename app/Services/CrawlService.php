@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Exception;
+use App\Models\CountLink;
 use FastSimpleHTMLDom\Document;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
@@ -14,13 +15,11 @@ use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 
 class CrawlService
 {
+    public $countLink;
+
     public function __construct()
     {
-    }
-
-    public function biaCac() {
-        echo 'bia cac';
-        return 1;
+        $this->countLink = new CountLink();
     }
 
     public function mergeTest()
@@ -84,7 +83,6 @@ class CrawlService
         $store_MMRZones = 'Memory Zone';
 
         $data = [];
-        // $errorLinks = $this->readDataCsv();
 
         foreach ($googleSheet as $i => $row) {
 
@@ -104,6 +102,8 @@ class CrawlService
 
             $k = 1;
             foreach ($row as $key => $url) {
+                // length row == so link /1 hang
+                // increase 9
                 $megaPriceStore = 0;
                 $priceLowerThanMoreMegaPrice = 0;
                 $priceHigherThanMoreMegaPrice = 0;
@@ -116,15 +116,13 @@ class CrawlService
                     } else {
                         $product[$store_MEGA] = $megaPriceStore;
                     }
-                    Log::debug('MSP : ' . $url);
+                    // Log::debug('MSP : ' . $url);
                     continue;
                 } else if ($TEN_HANG === $key) {
                     $product['ProductName'] = $url;
                     continue;
                 } else {
                     $price = 0;
-
-                    // if (!empty($url) && !in_array(trim($url), $errorLinks)) { // kiem tra url cos null khong va kiem url cos trong danh sach url error;
                     if (!empty($url)) { // kiem tra url cos null khong va kiem url cos trong danh sach url error;
                         try {
                             Log::debug('crawl data url : ' . $i . '_' . $k . '_' . $url);
@@ -234,7 +232,6 @@ class CrawlService
                                 }
                             }
                         } catch (Exception $e) {
-                            // $errorLinks[] = $url;
                             continue;
                         }
                     }
@@ -263,55 +260,25 @@ class CrawlService
                             $product['high'] = trim($key);
                         }
                     }
+                    // Log::error("count......");
+                    // Log::error(count($googleSheet));
+                    $this->countLink->updateTargetLink(1, count($googleSheet) * 315);
+                    $this->countLink->updateToltalLink(1, 1); // db = 18
+
                 }
             }
 
+
+
             $data[] = $product;
         }
-        //$this->writeDataCSV($errorLinks);
 
-        // echo "<pre>";
-        // print_r($data);
         $this->exportResult($data, false);
     }
 
-    // public function writeDataGGSheet() {
-    //     // $client = new Google_Client();
-    //     // $client->setApplicationName('prosarmoste');
-    //     // $client->setScopes([\Google_Service_Sheets::SPEARD]);
-    //     $client = new Google_Client();
-    //     $client->useApplicationDefaultCredentials();
-    //     $client->addScope(Drive::DRIVE);
-    //     $service = new SpreadSheet($client);
-    //     try{
-
-    //         $spreadsheet = new Google_Service_Sheets_Spreadsheet([
-    //             'properties' => [
-    //                 'title' => $title
-    //                 ]
-    //             ]);
-    //             $spreadsheet = $service->spreadsheets->create($spreadsheet, [
-    //                 'fields' => 'spreadsheetId'
-    //             ]);
-    //             printf("Spreadsheet ID: %s\n", $spreadsheet->spreadsheetId);
-    //             return $spreadsheet->spreadsheetId;
-    //     }
-    //     catch(Exception $e) {
-    //         // TODO(developer) - handle error appropriately
-    //         echo 'Message: ' .$e->getMessage();
-    //       }
-    // }
-
     public function writeDataCSV($errorLinks = [])
     {
-        // $dataCSV = '';
         $file = fopen(storage_path() . '/data.csv', "w");
-        // foreach ($errorLinks as $key => $value) {
-        //     if ($key !== 0) {
-        //         $dataCSV .=  ',';
-        //     }
-        //     $dataCSV .=  trim($value);
-        // }
         fputcsv($file, $errorLinks);
         fclose($file);
     }
@@ -341,8 +308,7 @@ class CrawlService
     public function readDataText($fileName)
     {
         $fileDate = date('Y-m-d');
-        $filePathMega =  public_path() . '/' . 'dataCrawl/' .$fileDate ."/". $fileName;
-        // public_path() . '/' . 'dataCrawl/' . $fileDate . '/' . "data.txt"
+        $filePathMega =  public_path() . '/' . 'dataCrawl/' . $fileDate . "/" . $fileName;
         $reader = ReaderEntityFactory::createReaderFromFile($filePathMega);
 
         $reader->open($filePathMega);
@@ -505,6 +471,7 @@ class CrawlService
         $price = 0;
         foreach ($html->find('div#product-info-price') as $e) {
             $price = $e->find('strong#js-pd-price')->text();
+            $price = str_replace("₫", "", $price);
             $price = str_replace(".", "", $price);
         }
 
@@ -711,7 +678,7 @@ class CrawlService
         foreach ($html->find('div.detail-price') as $e) {
             $price = $e->find('span.price')->text();
             $price = str_replace(".", "", $price);
-            $price = str_replace("Ä‘", "", $price);
+            $price = str_replace("Ä", "", $price);
         }
 
         return $price;
@@ -741,7 +708,6 @@ class CrawlService
         return $price;
     }
 
-
     public function getPriceNK($html)
     {
         $price = 0;
@@ -753,7 +719,6 @@ class CrawlService
 
         return $price;
     }
-
 
     public function getPriceLTWorld($html)
     {
@@ -801,7 +766,6 @@ class CrawlService
         return $price;
     }
 
-
     public function getPriceTZones($html)
     {
         $price = 0;
@@ -810,7 +774,6 @@ class CrawlService
             $price = str_replace(".", "", $price);
             $price = str_replace("₫", "", $price);
             $price = str_replace("Giá: Liên hệ", "", $price);
-
         }
 
         return $price;
@@ -828,7 +791,6 @@ class CrawlService
         return $price;
     }
 
-
     public function getPriceMMRZone($html)
     {
         $price = 0;
@@ -841,7 +803,6 @@ class CrawlService
 
         return $price;
     }
-
 
     // get range columns
     public function getColumnsRange($start = 'A', $end = 'ZZ')
@@ -874,12 +835,10 @@ class CrawlService
     {
 
         if (File::exists(public_path() . '/storage/data.xlsx')) {
-            //  unlink(public_path() . '/storage/data.xlsx');
         }
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        // $columnName = range('A', 'Z');
         $columnName = $this->getColumnsRange();
 
         $columnNumber = 0;
@@ -908,7 +867,6 @@ class CrawlService
             }
 
             $k = 2;
-            $dataHandle = [];
             $dataHandleSecond = [];
 
             $isChangeColor = 'A';
@@ -959,18 +917,14 @@ class CrawlService
             $rowNumber++;
         }
 
-        // print_r($isColorChangeArr);
-
         // Set width column
         $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(14);
         $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(54);
-        // foreach (range('C', 'AL') as $letra) {
         $columsDefault = array_filter($columnName, function ($column) {
             return $column !== 'A' && $column !== 'B';
         });
 
         foreach ($columsDefault as $letra) {
-            // echo $letra;
             $spreadsheet->getActiveSheet()->getColumnDimension($letra)->setWidth(15);
         }
 
@@ -984,13 +938,9 @@ class CrawlService
                 for ($column = 0; $column < $columnNumber; $column++) {
                     // set border
                     $nodeIndex = $spreadsheet->getActiveSheet()->getStyle($columnName[$column] . $r);
-                    // if ($r === 0) {
-                    //     $nodeIndex->getBorders()->getVertical()->setBorderStyle(Border::BORDER_DOTTED);
-                    //     $nodeIndex->getBorders()->getHorizontal()->setBorderStyle(Border::BORDER_THIN);
-                    // } else {
+
                     $nodeIndex->getBorders()->getBottom()->setBorderStyle(Border::BORDER_DOTTED);
                     $nodeIndex->getBorders()->getRight()->setBorderStyle(Border::BORDER_THIN);
-                    // }
 
                     // set text background color
                     $node = $spreadsheet->getActiveSheet()->getStyle($columnName[$column] . $r . ':' .  $columnName[$column] . $indexRow);
@@ -1021,14 +971,6 @@ class CrawlService
                                 $nodeIndex->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER)->setWrapText(true);
                                 break;
                         }
-
-                        // if ($isColorChangeArr[$r - 2] == 'A') {
-                        //     $noteARGB->setARGB('ffff00');
-                        //     $nodeIndex->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER)->setWrapText(true);
-                        // } else {
-                        //     $noteARGB->setARGB('ff0000');
-                        //     $nodeIndex->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER)->setWrapText(true);
-                        // }
                     } else {
                         $noteARGB->setARGB('fde9d9');
                         // set text style
@@ -1046,15 +988,22 @@ class CrawlService
             $this->createFile();
         }
 
-        $fileName = public_path() . '/dataCrawl' . "/" . $fileDate . '/data_' . strtotime(date('Y/m/d h:m:s'));
-        $saveFilePath = explode('/', $fileName);
-        // $fileName = '/data_' . strtotime(date('Y/m/d h:m:s'));
-        $writer->save($fileName . '.xlsx');
-        // if (!$writeFile) {
-            $myfile = fopen(public_path() . '/' ."dataCrawl" . "/" . $fileDate . "/". "data.txt", "a") or die("Unable to open file!");
+        if ($writeFile) {
+            $fileName = public_path() . '/dataCrawl' . "/" . $fileDate . '/data';
+            $saveFilePath = explode('/', $fileName);
+            $myfile = fopen(public_path() . '/' . "dataCrawl" . "/" . $fileDate . "/" . "data", "a") or die("Unable to open file!");
             $txt = $saveFilePath[3] . '.xlsx' . ";\n";
             fwrite($myfile, $txt);
+            $writer->save($fileName . '.xlsx');
             fclose($myfile);
-        // }
+        }
+
+        $fileName = public_path() . '/dataCrawl' . "/" . $fileDate . '/data_' . strtotime(date('Y/m/d h:m:s'));
+        $saveFilePath = explode('/', $fileName);
+        $writer->save($fileName . '.xlsx');
+        $myfile = fopen(public_path() . '/' . "dataCrawl" . "/" . $fileDate . "/" . "data.txt", "a") or die("Unable to open file!");
+        $txt = $saveFilePath[3] . '.xlsx' . ";\n";
+        fwrite($myfile, $txt);
+        fclose($myfile);
     }
 }

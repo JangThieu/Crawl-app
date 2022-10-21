@@ -1,67 +1,55 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        <div class="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-            <div class="bg-white rounded-2xl shadow-2xl flex w-2/3 max-w-2xl justify-center">
-                <div class="w-3/5 p-5">
-                    <div class="py-10">
-                        <form method="POST" action="{{ route('login') }}">
-                            @csrf
-                            <h2 class="text-3xl font-bold text-green-500 mb-2">
-                                Sign in to Account
-                            </h2>
+    <div class="h-screen font-sans login bg-cover">
+        <div class="container mx-auto h-full flex flex-1 justify-center items-center">
+            <div class="w-full max-w-lg">
+                <div class="leading-loose">
+                    <form class="max-w-xl m-4 p-10 bg-white rounded shadow-xl" method="POST" action="{{ route('login') }}">
+                        @csrf
+                        <p class="text-gray-800 font-medium text-center text-lg ">Login</p>
+                        <div class="">
+                            <label class="block text-sm text-gray-00" for="email">Email</label>
+                            <input
+                                class="w-full px-3 py-1 text-gray-700 bg-gray-200 rounded @error('email') is-invalid @enderror"
+                                id="email" name="email" type="text" required placeholder="Email" aria-label="email"
+                                value="{{ old('email') }}" autofocus autocomplete="email">
+                            @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="mt-2">
+                            <label class="block text-sm text-gray-600 " for="password">Password</label>
+                            <input
+                                class="w-full px-3 py-1 text-gray-700 bg-gray-200 rounded @error('password') is-invalid @enderror"
+                                type="password" name="password" placeholder="******" required >
+                            @error('password')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="mt-4 items-center justify-between">
+                            <button class="px-4 py-1 text-white font-light tracking-wider bg-gray-900 rounded"
+                                type="submit">Login</button>
+                            @if (Route::has('password.request'))
+                                <a class="inline-block right-0 align-baseline  font-bold text-sm text-500 hover:text-blue-800"
+                                    href="{{ route('password.request') }}">
+                                    Forgot Password?
+                                </a>
+                            @endif
 
-                            <div class="border-2 w-10 border-green-500 inline-block mb-2"></div>
-                            <div class="flex flex-col items-center">
-                                <div class="bg-gray-100 w-64 p-2 flex items-center mb-3">
-                                    <i class="fa-solid fa-envelope text-gray-400 m-2"></i>
-                                    <input type="email" name="email" placeholder="Email"
-                                        class="bg-gray-100 outline-none text-sm flex-1 @error('email') is-invalid @enderror"
-                                        value="{{ old('email') }}" required autocomplete="email" autofocus>
-                                    @error('email')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
+                        </div>
+                        @if (Route::has('register'))
+                            <a class="inline-block right-0 align-baseline font-bold text-sm text-500 hover:text-blue-800"
+                                href="{{ route('register') }}">
+                                Not registered ?
+                            </a>
+                        @endif
+                    </form>
 
-                                <div class="bg-gray-100 w-64 p-2 flex items-center mb-3">
-                                    <i class="fa-solid fa-lock text-gray-400 m-2"></i>
-                                    <input type="password" name="password" placeholder="Password"
-                                        class="bg-gray-100 outline-none text-sm flex-1 @error('password') is-invalid @enderror"
-                                        required autocomplete="current-password">
-                                    @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-
-                                <button type="submit"
-                                    class="border-2 border-green-500 text-green-500 rounded-full px-12 py-2 inline-block font-semibold hover:bg-green-500 hover:text-white">
-                                    {{ __('Login') }}
-                                </button>
-
-                                <div class="flex flex-col items-center mt-4">
-                                    <p class="italic font-semibold">
-                                        Join us now.
-                                        @if (Route::has('register'))
-                                            <a href="{{ route('register') }}"
-                                                class="ml-1 text-green-500 hover:underline">Register here</a>
-                                        @endif
-                                    </p>
-                                    <p class="italic font-semibold">
-                                        Lost your password?
-                                        @if (Route::has('password.request'))
-                                            <a class="ml-1 text-green-500 hover:underline"
-                                                href="{{ route('password.request') }}">Forgot
-                                                Password?</a>
-                                        @endif
-                                    </p>
-                                </div>
-                        </form>
-                    </div>
                 </div>
             </div>
         </div>

@@ -1,163 +1,240 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        <div class="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-            <div class="rounded-2xl shadow-2xl flex w-2/3 max-w-2xl justify-center bg-custom">
-                <div class="w-4/5 p-5">
-
-                    <label for="times" class="block mb-2 text-2xl font-bold text-gray-900 dark:text-gray-400 ">Add new
-                        cronjob</label>
-                    <h3 for="" class="text-left font-bold mb-2">Common setting</h3>
-                    <select id="times"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option selected>Once Per Minute(* * * * *)</option>
-                        <option value="5min">5 Minutes</option>
-                        <option value="10min">10 Minutes</option>
-                        <option value="15min">15 Minutes</option>
-                        <option value="20min">20 Minutes</option>
-                    </select>
-                    <h3 class="font-bold text-left mt-4">Minutes</h3>
-                    <div class="grid grid-cols-2 gap-2">
-                        <input
-                            class="shadow appearance-none border rounded w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="username" type="text" placeholder="*">
-                        <select id="times"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option selected>Once Per Minute(*)</option>
-                            <option value="5min">5 Minutes</option>
-                            <option value="10min">10 Minutes</option>
-                            <option value="15min">15 Minutes</option>
-                            <option value="20min">20 Minutes</option>
-                        </select>
+    <div class="mx-auto bg-[#fff]">
+        <!--Screen-->
+        <div class="min-h-screen flex flex-col">
+            <!--Header Section Starts Here-->
+            <header class="bg-[#fff]">
+                <nav class="navbar navbar-expand-md navbar-light shadow-sm p-2">
+                    <div class="container">
+                        <a class="navbar-brand pl-2 text-white logo" href="#">
+                            <img src="https://mega.com.vn/media/banner/logo_logo%20web.png" alt="" class="logo-img">
+                        </a>
                     </div>
 
-                    <h3 class="font-bold text-left mt-4">Hours</h3>
-                    <div class="grid grid-cols-2 gap-2">
-                        <input
-                            class="shadow appearance-none border rounded w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="username" type="text" placeholder="*">
-                        <select id="times"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option selected>Every Hour(*)</option>
-                            <option value="5hour">5 Hours</option>
-                            <option value="10hour">10 Hours</option>
-                            <option value="15hour">15 Hours</option>
-                            <option value="20hour">20 Hours</option>
-                        </select>
-                    </div>
-
-                    <h3 class="font-bold text-left mt-4">Days</h3>
-                    <div class="grid grid-cols-2 gap-2">
-                        <input
-                            class="shadow appearance-none border rounded w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="username" type="text" placeholder="*">
-                        <select id="times"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option selected>Every Day(*)</option>
-                            <option value="5day">5 Days</option>
-                            <option value="10day">10 Days</option>
-                            <option value="15day">15 Days</option>
-                            <option value="20day">20 Days</option>
-                        </select>
-                    </div>
-
-                    <h3 class="font-bold text-left mt-4">Month</h3>
-                    <div class="grid grid-cols-2 gap-2">
-                        <input
-                            class="shadow appearance-none border rounded w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="username" type="text" placeholder="*">
-                        <select id="times"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option selected>Every Month(*)</option>
-                            <option value="5month">5 Months</option>
-                            <option value="10month">10 Months</option>
-                            <option value="15month">15 Months</option>
-                            <option value="20month">20 Months</option>
-                        </select>
-                    </div>
-
-                    <h3 class="font-bold text-left mt-4">Command</h3>
-                    <input
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text" value="{{ old('command') }}" name="run-command" id="input-command"
-                        placeholder="php /path/to/artisan schedule:run 1>> /dev/null 2>&1">
-                    {{-- <a href="{{ route('run-file') }}"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-4"></a> --}}
-                    <button type="submit" id="run-command" name="runCommand"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-4"> Run Command
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                        <span class="navbar-toggler-icon"></span>
                     </button>
-                    {{-- <a href="../../batch.bat"> run</a> --}}
-                    {{-- <button type="button" id="run-batch-file"> run</button> --}}
-                    <div class="py-10">
-                        <div class="flex flex-col items-center mt-4" id="showDownload">
-                            <div class="progress-bar" id="progress-bar"></div>
-                            <a href="/download" id="download"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-2">
-                                <i class="fa-solid fa-download mr-2"></i>
-                                Download File
-                            </a>
-                        </div>
-                    </div>
 
-                </div>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <!-- Left Side Of Navbar -->
+                        <ul class="navbar-nav me-auto">
+
+                        </ul>
+
+                        <!-- Right Side Of Navbar -->
+                        <ul class="navbar-nav ms-auto">
+                            <!-- Authentication Links -->
+                            @guest
+                                @if (Route::has('login'))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    </li>
+                                @endif
+
+                                @if (Route::has('register'))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    </li>
+                                @endif
+                            @else
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle text-gray-500" href="#"
+                                        role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                        v-pre>
+                                        {{ Auth::user()->name }}
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
+                                                             document.getElementById('logout-form').submit();">
+                                            {{ __('Logout') }}
+                                        </a>
+
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            @csrf
+                                        </form>
+                                    </div>
+                                </li>
+                            @endguest
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            <!--/Header-->
+
+            <div class="flex flex-1">
+                <!--Sidebar-->
+                <aside id="sidebar"
+                    class="bg-side-nav w-1/2 md:w-1/6 lg:w-1/6 border-r border-side-nav hidden md:block lg:block">
+                    <div class="flex">
+
+                    </div>
+                    <ul class="list-reset flex flex-col">
+                        <li class=" w-full h-full py-3 px-2 border-b border-300-border ">
+                            <a href="{{ route('home') }}"
+                                class="font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline">
+                                <i class="fas fa-tachometer-alt float-left mx-2"></i>
+                                Dashboard
+                                <span><i class="fas fa-angle-right float-right"></i></span>
+                            </a>
+                        </li>
+                        <li class="w-full h-full py-3 px-2">
+                            <a href="#"
+                                class="font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline">
+                                <i class="far fa-file float-left mx-2"></i>
+                                Pages
+                                <span><i class="fa fa-angle-down float-right"></i></span>
+                            </a>
+                            <ul class="list-reset -mx-2 bg-white-medium-dark">
+                                <li class="border-t mt-2 border-300-border w-full h-full px-2 py-3">
+                                    @if (Route::has('login'))
+                                        <a href="{{ route('login') }}"
+                                            class="mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline">
+                                            Login Page
+                                            <span><i class="fa fa-angle-right float-right"></i></span>
+                                        </a>
+                                    @endif
+
+                                </li>
+                                <li class="border-t border-300-border w-full h-full px-2 py-3">
+                                    @if (Route::has('register'))
+                                        <a href="{{ route('register') }}"
+                                            class="mx-4 font-sans font-hairline hover:font-normal text-sm text-nav-item no-underline">
+                                            Register Page
+                                            <span><i class="fa fa-angle-right float-right"></i></span>
+                                        </a>
+                                    @endif
+
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                </aside>
+                <!--/Sidebar-->
+                <!--Main-->
+                <main class="bg-white-medium flex-1 p-3 overflow-hidden">
+
+                    <div class="flex flex-col">
+                        <!-- Card Sextion Starts Here -->
+
+                        <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+                            <div class="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
+                                <div class="rounded-2xl shadow-2xl flex w-2/3 max-w-2xl justify-center bg-custom">
+                                    <div class="w-4/5 p-5">
+
+                                        <button type="submit" id="run-command" name="runCommand"
+                                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-4">
+                                            Run Command
+                                        </button>
+
+                                        <div class="py-10">
+                                            <div class="flex flex-col items-center mt-4" id="showDownload">
+                                                <div class="progress-bar" id="progress-bar"></div>
+                                                <a href="/download" id="download"
+                                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded mt-2">
+                                                    <i class="fa-solid fa-download mr-2"></i>
+                                                    Download File
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </main>
+                <!--/Main-->
             </div>
+            <footer class="bg-[#3d4852] text-white p-2">
+                <div class="flex flex-1 mx-auto">&copy; 2019. CÔNG TY TNHH TIN HỌC MEGA. Giấy phép kinh doanh: 0400480223 - do sở KH & ĐT TP. Đà Nẵng cấp ngày: 25/01/2005.
+                    All rights reserved.</div>
+            </footer>
         </div>
+
     </div>
 @endsection
 
-{{-- @php
-
-if(isset($_POST['runCommand'])){
-    exec('batch.bat');
-  }
-
-function runFile()
-{
-    $file = '/batch.bat';
-    if (!$file) {
-        die('file not found');
-    } else {
-        // Set headers
-        header('Cache-Control: public');
-        header('Content-Description: File Transfer');
-        header("Content-Disposition: attachment; filename=$file");
-        header('Content-Type: application/bat');
-        header('Content-Transfer-Encoding: ASCII');
-
-        //Read the file from disk
-        readfile($file);
-    }
-}
-
-@endphp --}}
-
 @section('script')
     <script language="javascript" type="text/javascript">
-        $(function() {
-            $('#showDownload').hide();
-            $("button[id=run-command]").click(function() {
-                $('#showDownload').fadeIn(3000);
-            })
-        })
-
         $(document).ready(function() {
             $('button[id="run-command"]').click(function() {
-                // WshShell = new ActiveXObject("Wscript.Shell");
-                // WshShell.run("batch.bat");
                 $.ajax({
-                    url: 'run-command',
+                    url: 'http://localhost:3015/run-command',
                     type: "post",
                     // command: command
                 })
             })
         })
     </script>
-    {{-- <script src="js/index.js">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+        integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.3/socket.io.js"
+        integrity="sha512-iWPnCISAd/J+ZacwV2mbNLCaPGRrRo5OS81lKTVPtRg1wGTC20Cfmp5Us5RcbLv42QLdbAWl0MI57yox5VecQg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        var socket = io("http://localhost:3015/", {
+            secure: true,
+            transports: ["websocket", "polling"]
+        })
+
+        socket.on("isRunning", isRunning => {
+            if (isRunning) {
+                socket.emit("start:job")
+            } else {
+                socket.emit("end:job")
+            }
+        })
+
         $(function() {
-            $("button[id=run-batch-file]").click(function() {
-                runBatchFile();
+            // $('#showDownload').fadeIn(1000);
+            $("button[id=run-command]").click(function() {
+                socket.emit("start:job");
             })
         })
-    </script> --}}
+
+        socket.on('connect:server', function(data) {
+            console.log(data);
+        })
+
+        socket.on("valueOn", data => {
+            const progressBar = document.getElementById("progress-bar");
+            var percent = (parseFloat(data['totalLink']) / parseFloat(data['targetLink'])) * 100;
+            if (data.targetLink == '0') {
+                progressBar.dataset.status = 0 + "%";
+                progressBar.setAttribute(
+                    "style",
+                    `--__progress-bar__status_wh: ${0}%;`
+                );
+            } else {
+                progressBar.dataset.status = Math.floor(percent) + "%";
+                progressBar.setAttribute(
+                    "style",
+                    `--__progress-bar__status_wh: ${percent}%;`
+                );
+            }
+
+            if (Math.floor(percent) > 95) {
+                progressBar.dataset.status = 100 + "%";
+                progressBar.setAttribute(
+                    "style",
+                    `--__progress-bar__status_wh: ${100}%;`
+                );
+                socket.emit("end:job");
+            }
+
+            console.log({
+                data
+            })
+        })
+    </script>
 @endsection

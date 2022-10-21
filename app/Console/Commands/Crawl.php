@@ -66,7 +66,7 @@ class Crawl extends Command
                 $megaPrice[trim($row->MSP)] = trim($row->PRICE);
             }
 
-            $length = 2;
+            $length = 5;
             for ($i = 0; $i <= 8; $i++) {
                 $indexStart = $i * $length;
                 $googleSheet = array_slice($googleSheetReponse, $indexStart, $length, true);
